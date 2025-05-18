@@ -2,7 +2,7 @@ import { Client } from '@elastic/elasticsearch';
 import { config } from '@gig/config';
 import { Logger } from 'winston';
 import { ISellerGig, winstonLogger } from '@eoladapo/jobman-shared';
-import { ClusterHealthResponse, GetResponse } from '@elastic/elasticsearch/lib/api/types';
+import { ClusterHealthResponse, CountResponse, GetResponse } from '@elastic/elasticsearch/lib/api/types';
 
 const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'GigElasticSearchServer', 'debug');
 
@@ -45,6 +45,16 @@ const createIndex = async (indexName: string): Promise<void> => {
   }
 };
 
+const getDocumentCount = async (index: string): Promise<number> => {
+  try {
+    const result: CountResponse = await elasticSearchClient.count({ index });
+    return result.count;
+  } catch (error) {
+    log.log('error', 'GigService elasticsearch getDocumentCount() method:', error);
+    return 0;
+  }
+};
+
 const getIndexedData = async (index: string, itemId: string): Promise<ISellerGig> => {
   try {
     const result: GetResponse = await elasticSearchClient.get({ index, id: itemId });
@@ -79,4 +89,13 @@ const deleteIndexData = async (index: string, itemId: string): Promise<void> => 
   }
 };
 
-export { elasticSearchClient, checkConnection, createIndex, getIndexedData, addDataToIndex, updateIndexData, deleteIndexData };
+export {
+  elasticSearchClient,
+  checkConnection,
+  getDocumentCount,
+  createIndex,
+  getIndexedData,
+  addDataToIndex,
+  updateIndexData,
+  deleteIndexData
+};
