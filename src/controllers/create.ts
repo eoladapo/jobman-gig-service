@@ -9,12 +9,12 @@ import { getDocumentCount } from '@gig/elasticsearch';
 const gigCreate = async (req: Request, res: Response): Promise<void> => {
   const { error } = await Promise.resolve(gigCreateSchema.validate(req.body));
   if (error?.details) {
-    throw new BadRequestError(error.details[0].message, 'createGig() method');
+    throw new BadRequestError(error.details[0].message, 'Create gig() method');
   }
 
   const result: UploadApiResponse = (await uploads(req.body.coverImage)) as UploadApiResponse;
   if (!result.public_id) {
-    throw new BadRequestError('File upload error. Try again', 'createGig() method');
+    throw new BadRequestError('File upload error. Try again.', 'Create gig() method');
   }
 
   const count = await getDocumentCount('gigs');
@@ -38,7 +38,7 @@ const gigCreate = async (req: Request, res: Response): Promise<void> => {
   };
 
   const createdGig: ISellerGig = await createGig(gig);
-  res.status(StatusCodes.CREATED).json({ message: 'Gig created successfully', gig: createdGig });
+  res.status(StatusCodes.CREATED).json({ message: 'Gig created successfully.', gig: createdGig });
 };
 
 export { gigCreate };

@@ -16,7 +16,7 @@ const gigUpdate = async (req: Request, res: Response): Promise<void> => {
   if (isDataUrl) {
     const result: UploadApiResponse = (await uploads(req.body.coverImage)) as UploadApiResponse;
     if (!result.public_id) {
-      throw new BadRequestError('File upload error. Try again', 'createGig() method');
+      throw new BadRequestError('File upload error. Try again', 'create gig() method');
     }
     coverImage = result?.secure_url;
   } else {
