@@ -3,7 +3,7 @@ import { config } from '@gig/config';
 import { Channel, ConsumeMessage, Replies } from 'amqplib';
 import { Logger } from 'winston';
 import { createConnection } from '@gig/queues/connection';
-import { updateGigReview } from '@gig/services/gig.service';
+import { seedData, updateGigReview } from '@gig/services/gig.service';
 
 const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'gigServerConsumer', 'debug');
 
@@ -43,6 +43,8 @@ const consumeSeedDirectMessage = async (channel: Channel): Promise<void> => {
     await channel.bindQueue(jobmanQueue.queue, exchanegeName, routingKey);
     channel.consume(jobmanQueue.queue, async (msg: ConsumeMessage | null) => {
       //TODO: use seed data function
+      const { sellers, count } = JSON.parse(msg!.content.toString());
+      await seedData(sellers, count);
       channel.ack(msg!);
     });
   } catch (error) {
