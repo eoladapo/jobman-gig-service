@@ -24,7 +24,7 @@ const start = (app: Application): void => {
   routesMiddleware(app);
   startQueues();
   startElasticSearch();
-  usersErrorHandler(app);
+  gigErrorHandler(app);
   startServer(app);
 };
 
@@ -70,7 +70,7 @@ const startElasticSearch = (): void => {
   createIndex('gigs');
 };
 
-const usersErrorHandler = (app: Application): void => {
+const gigErrorHandler = (app: Application): void => {
   app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
     log.log('error', `GigService ${error.comingFrom}: `, error);
     if (error instanceof CustomError) {

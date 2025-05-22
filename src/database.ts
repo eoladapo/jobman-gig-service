@@ -8,9 +8,9 @@ const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'gigDatabase',
 const databaseConnection = async (): Promise<void> => {
   try {
     await mongoose.connect(`${config.DATABASE_URL}`);
-    log.info('User Service - Successfully connected to database');
+    log.info('Gig Service - Successfully connected to database');
   } catch (error) {
-    log.error('error', 'User Service databaseConnection() method:', error);
+    log.error('error', 'Gig Service databaseConnection() method:', error);
   }
 };
 
